@@ -86,9 +86,9 @@ lorawan-network-simulator/
 ## 🌱 Future Improvements
 
 - Add multi-gateway support
-- Simulate ADR (Adaptive Data Rate)
-- Add real-world dataset comparison
-- Export results to CSV
+- Simulate ADR (Adaptive Data Rate) (https://learn.semtech.com/mod/book/view.php?id=174)
+- Add real-world dataset comparison (https://zenodo.org/records/4121430#.YjMRoX_MJhE)
+- Export results to CSV 
 
 ---
 
