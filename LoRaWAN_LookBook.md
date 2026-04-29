@@ -1,0 +1,123 @@
+# 📡 LoRaWAN Terminology Abbreviation Look Book
+
+> A quick-reference guide for LoRaWAN abbreviations, memory expressions, and architecture.
+
+---
+
+## 🔐 Security & Activation
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **ABP** | Activation By Personalization | Pre-set keys (no join) 🔑 | *"Already Built-in Passwords"* |
+| **OTAA** | Over-The-Air Activation | Dynamic secure join 🌐 | *"On The Air Access"* |
+| **DevNonce** | Device Nonce | One-time number to prevent replay attacks 🔁 | *"Never Once reused"* |
+| **MIC** | Message Integrity Code | Verifies message hasn't been tampered ✔ | *"Message Is Correct"* |
+
+---
+
+## 📶 Radio & Communication
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **BW** | Bandwidth | Frequency range used 📡 | *"Band Width = Frequency width"* |
+| **CR** | Coding Rate | Error correction level 🛠 | *"Correcting Rate"* |
+| **SF** | Spreading Factor | Range ↔ Data rate trade-off 🔄 | *"Spread Far — ↑SF = ↑range, ↓speed"* |
+| **RSSI** | Received Signal Strength Indicator | Signal strength measurement 📶 | *"Received Signal Strength Indicator"* |
+| **CSS** | Chirp Spread Spectrum | LoRa's core modulation technique 🎯 | *"Chirp = bird-like sound spreading signal"* |
+
+---
+
+## 🌐 Network & Devices
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **LPWAN** | Low-Power Wide-Area Network | Long-range + low power networking 🔋 | *"Low Power Wide Area"* |
+| **NS** | Network Server | Manages routing and network logic 🧠 | *"Network's Brain"* |
+| **ED** | End Device | Sensor or IoT node 📟 | *"End-user Device"* |
+| **ISM** | Industrial, Scientific and Medical | License-free radio frequency bands 📡 | *"I See More (free) frequencies"* |
+
+---
+
+## 🆔 Device Identity
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **DevAddr** | Device Address | Network-level address of the device 🆔 | *"Device Address"* |
+| **DevEUI** | Device Extended Unique Identifier | Globally unique hardware ID 🌍 | *"Extended Unique Identity"* |
+
+---
+
+## 📦 Frame Structure
+
+> **Important** — Understanding frame structure is key to debugging LoRaWAN packets.
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **MHDR** | MAC Header | Indicates message type 📨 | *"Main Header"* |
+| **FHDR** | Frame Header | Contains address + control info 📦 | *"Frame Head"* |
+| **FCtrl** | Frame Control | Carries control flags 🎛 | *"Frame Controls behavior"* |
+| **FOpts** | Frame Options | Optional MAC commands ⚙ | *"Frame Options = extra commands"* |
+| **PHDR** | Physical Header | Physical layer metadata 📡 | *"Physical Header"* |
+
+---
+
+## 🔢 Frame Counters
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **FCnt** | Frame Counter | Counts total frames exchanged 🔢 | *"Frame Count"* |
+| **FCntUp** | Frame Counter Uplink | Counts frames: Device → Server ⬆ | *"Up = Upload"* |
+| **FCntDown** | Frame Counter Downlink | Counts frames: Server → Device ⬇ | *"Down = Download"* |
+
+---
+
+## 📊 Dataset / Research
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **LoED** | LoRaWAN at the Edge Dataset | Edge network research dataset 📊 | *"LoRa at Edge Data"* |
+
+---
+
+## ⚡ Optimization
+
+| Abbreviation | Full Form | Meaning | Memory Hook |
+|---|---|---|---|
+| **ADR** | Adaptive Data Rate | Auto-adjusts data rate and TX power ⚡ | *"Auto Data Rate"* |
+
+---
+
+## 🧩 Network Architecture
+
+```
+   📟 End Device (ED)
+        │
+        │  [LoRa Radio: SF, BW, CR, CSS]
+        │
+        ▼
+   📡 Gateway
+        │
+        │  [Forwards packets over IP]
+        │
+        ▼
+   🧠 Network Server (NS)
+        │
+        │  [Routing, deduplication, ADR]
+        │
+        ▼
+   ☁️  Application Server / Cloud
+```
+
+### Flow Summary
+
+1. **End Device** collects sensor data and transmits over LoRa radio
+2. **Gateway** receives the signal and forwards it over IP to the Network Server
+3. **Network Server** handles routing, deduplication, and adaptive data rate
+4. **Application Server** processes the final data for your app or dashboard
+
+### Security Layer (runs throughout)
+- **MIC** verifies every message hasn't been altered
+- **DevNonce** prevents replay attacks during join
+- **ABP / OTAA** establish session keys for encryption
+
+
