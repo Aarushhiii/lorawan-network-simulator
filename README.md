@@ -89,6 +89,13 @@ lorawan-network-simulator/
 - Simulate ADR (Adaptive Data Rate) (https://learn.semtech.com/mod/book/view.php?id=174)
 - Add real-world dataset comparison (https://zenodo.org/records/4121430#.YjMRoX_MJhE)
 - Export results to CSV : Done ✅
+  
+-   GitHub README Integration Tips
+•	Render formulae with GitHub-supported LaTeX fencing: wrap equations in $$ ... $$ blocks in README.md
+•	Embed lorawan_simulation_results.png at the top of the README so reviewers see results without running code
+•	Use a Mermaid.js block to render the network topology diagram inline in the browser
+Add a Results section with a table linking each plot to its interpretation — reviewers rarely run notebooks
+
 
 ---
 
