@@ -16,6 +16,8 @@ Run:
 """
 
 import random
+import csv
+import argparse
 import math
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -114,6 +116,18 @@ def estimate_battery_life_days(sf, transmissions_per_hour=1, battery_mah=2000):
     current_ma = tx_time_hours * 100 + sleep_time_hours * 0.01
     life_hours = battery_mah / current_ma
     return life_hours / 24
+
+    def export_csv(results, filename="results.csv"):
+    """Export simulation results to a CSV file."""
+    with open(filename, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            "sf", "success_rate", "collision_rate",
+            "avg_rssi", "time_on_air_ms", "battery_days"
+        ])
+        writer.writeheader()
+        for sf, data in results.items():
+            writer.writerow({"sf": sf, **data})
+    print(f"Results exported to: {filename}")
 
 
 # ─────────────────────────────────────────────
@@ -328,14 +342,22 @@ def what_if_mode():
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
+    # --- argument parser ---
+    parser = argparse.ArgumentParser(description="LoRaWAN Network Simulator")
+    parser.add_argument("--export", metavar="FILE", help="Export results to a CSV file (e.g. results.csv)")
+    args = parser.parse_args()
+
     print("="*55)
-    print("  LoRaWAN Network Simulator")
-    print("  Project 1 — Dr. Hari Prabhat Gupta Lab Prep")
+    print(" LoRaWAN Network Simulator")
     print("="*55)
 
     print("\nRunning default simulation (20 nodes, 50 packets, 5km radius)...")
     results = run_simulation()
     plot_results(results)
+
+    # --- export if flag provided ---
+    if args.export:
+        export_csv(results, args.export)
 
     again = input("\nRun What-If mode? (y/n): ").strip().lower()
     if again == "y":
