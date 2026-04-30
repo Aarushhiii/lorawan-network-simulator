@@ -6,7 +6,7 @@ A Python-based simulator for LoRaWAN networks that models the effects of **Sprea
 
 ## 📸 Output
 
-![Simulation Results](assets/lorawan_simulation_results.png)
+![Simulation Results](https://github.com/Aarushhiii/lorawan-network-simulator/raw/main/lorawan_simulation_results.png)
 
 ---
 
