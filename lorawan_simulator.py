@@ -117,7 +117,7 @@ def estimate_battery_life_days(sf, transmissions_per_hour=1, battery_mah=2000):
     life_hours = battery_mah / current_ma
     return life_hours / 24
 
-    def export_csv(results, filename="results.csv"):
+def export_csv(results, filename="results.csv"):
     """Export simulation results to a CSV file."""
     with open(filename, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[
