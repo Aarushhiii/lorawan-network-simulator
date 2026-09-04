@@ -1,3 +1,4 @@
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Aarushhiii/lorawan-network-simulator)
 # 📡 LoRaWAN Network Simulator
 
 A Python-based simulator for LoRaWAN networks that models the effects of **Spreading Factor (SF)** on packet success rate, signal strength, battery life, and packet collisions.
