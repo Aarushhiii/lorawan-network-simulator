@@ -192,8 +192,7 @@ def run_simulation(num_nodes=20, num_packets_per_node=50, area_radius_m=5000):
 # VISUALISATION
 # ─────────────────────────────────────────────
 
-def plot_results(results):
-    sfs         = list(results.keys())
+def plot_results(results, num_nodes, num_packets_per_node, area_radius_m):    sfs         = list(results.keys())
     success     = [results[sf]["success_rate"]   for sf in sfs]
     collisions  = [results[sf]["collision_rate"] for sf in sfs]
     rssi        = [results[sf]["avg_rssi"]       for sf in sfs]
@@ -204,6 +203,10 @@ def plot_results(results):
     fig = plt.figure(figsize=(16, 10))
     fig.suptitle("LoRaWAN Network Simulator — Spreading Factor Analysis",
                  fontsize=15, fontweight="bold", y=0.98)
+    fig.text(0.5, 0.955,
+              f"Nodes: {num_nodes}   |   Packets/node: {num_packets_per_node}   |   "
+              f"Network radius: {area_radius_m} m",
+              ha="center", fontsize=10, color="gray")
 
     gs = gridspec.GridSpec(2, 3, figure=fig, hspace=0.45, wspace=0.35)
 
@@ -307,10 +310,10 @@ def plot_results(results):
 # WHAT-IF MODE  (interactive terminal)
 # ─────────────────────────────────────────────
 
-def what_if_mode():
-    print("\n" + "="*55)
-    print("  LoRaWAN What-If Playground")
-    print("="*55)
+    def what_if_mode():
+        print("\n" + "="*55)
+        print("  LoRaWAN What-If Playground")
+        print("="*55)
 
     try:
         num_nodes = int(input("Number of sensor nodes [default 20]: ") or 20)
@@ -334,27 +337,27 @@ def what_if_mode():
               f"{r['time_on_air_ms']:<12} {r['battery_days']}")
 
     print("\nGenerating charts...")
-    plot_results(results)
+    plot_results(results, num_nodes, packets, radius)
 
 
 # ─────────────────────────────────────────────
 # ENTRY POINT
 # ─────────────────────────────────────────────
 
-if __name__ == "__main__":
+    if __name__ == "__main__":
     # --- argument parser ---
-    parser = argparse.ArgumentParser(description="LoRaWAN Network Simulator")
-    parser.add_argument("--export", metavar="FILE", help="Export results to a CSV file (e.g. results.csv)")
-    args = parser.parse_args()
+        parser = argparse.ArgumentParser(description="LoRaWAN Network Simulator")
+        parser.add_argument("--export", metavar="FILE", help="Export results to a CSV file (e.g. results.csv)")
+        args = parser.parse_args()
 
-    print("="*55)
-    print(" LoRaWAN Network Simulator")
-    print("="*55)
+        print("="*55)
+        print(" LoRaWAN Network Simulator")
+        print("="*55)
 
-    print("\nRunning default simulation (20 nodes, 50 packets, 5km radius)...")
-    results = run_simulation()
-    plot_results(results)
-
+        default_nodes, default_packets, default_radius = 20, 50, 5000
+        print(f"\nRunning default simulation ({default_nodes} nodes, {default_packets} packets, {default_radius}m radius)...")
+        results = run_simulation(default_nodes, default_packets, default_radius)
+        plot_results(results, default_nodes, default_packets, default_radius)
     # --- export if flag provided ---
     if args.export:
         export_csv(results, args.export)
