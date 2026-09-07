@@ -117,6 +117,7 @@ def estimate_battery_life_days(sf, transmissions_per_hour=1, battery_mah=2000):
     life_hours = battery_mah / current_ma
     return life_hours / 24
 
+
 def export_csv(results, filename="results.csv"):
     """Export simulation results to a CSV file."""
     with open(filename, "w", newline="") as f:
@@ -143,10 +144,10 @@ def run_simulation(num_nodes=20, num_packets_per_node=50, area_radius_m=5000):
     results = {}
 
     for sf in SPREADING_FACTORS:
-        success_count  = 0
+        success_count = 0
         collision_count = 0
-        total_packets  = num_nodes * num_packets_per_node
-        rssi_values    = []
+        total_packets = num_nodes * num_packets_per_node
+        rssi_values = []
 
         # Random node positions
         node_distances = [random.uniform(100, area_radius_m)
@@ -156,7 +157,7 @@ def run_simulation(num_nodes=20, num_packets_per_node=50, area_radius_m=5000):
 
             # Each node transmits at a random time within a 60-second window
             tx_times = [random.uniform(0, 60_000) for _ in range(num_nodes)]
-            tx_sfs   = [sf] * num_nodes
+            tx_sfs = [sf] * num_nodes
 
             for node_idx, (dist, t_start) in enumerate(zip(node_distances, tx_times)):
                 rssi = calculate_rssi(dist)
@@ -171,10 +172,10 @@ def run_simulation(num_nodes=20, num_packets_per_node=50, area_radius_m=5000):
                 elif collided:
                     collision_count += 1
 
-        success_rate  = (success_count / total_packets) * 100
+        success_rate = (success_count / total_packets) * 100
         collision_rate = (collision_count / total_packets) * 100
-        avg_rssi      = sum(rssi_values) / len(rssi_values)
-        battery_days  = estimate_battery_life_days(sf)
+        avg_rssi = sum(rssi_values) / len(rssi_values)
+        battery_days = estimate_battery_life_days(sf)
 
         results[sf] = {
             "success_rate":   round(success_rate,   2),
@@ -201,81 +202,81 @@ def plot_results(results, num_nodes, num_packets_per_node, area_radius_m):
     battery = [results[sf]["battery_days"] for sf in sfs]
     sensitivity = [results[sf]["sensitivity"] for sf in sfs]
 
-fig = plt.figure(figsize=(16, 10))
-fig.suptitle("LoRaWAN Network Simulator — Spreading Factor Analysis",
+    fig = plt.figure(figsize=(16, 10))
+    fig.suptitle("LoRaWAN Network Simulator — Spreading Factor Analysis",
                  fontsize=15, fontweight="bold", y=0.98)
-fig.text(0.5, 0.955,
-              f"Nodes: {num_nodes}   |   Packets/node: {num_packets_per_node}   |   "
-              f"Network radius: {area_radius_m} m",
-              ha="center", fontsize=10, color="gray")
+    fig.text(0.5, 0.955,
+             f"Nodes: {num_nodes}   |   Packets/node: {num_packets_per_node}   |   "
+             f"Network radius: {area_radius_m} m",
+             ha="center", fontsize=10, color="gray")
 
-gs = gridspec.GridSpec(2, 3, figure=fig, hspace=0.45, wspace=0.35)
+    gs = gridspec.GridSpec(2, 3, figure=fig, hspace=0.45, wspace=0.35)
 
-colors = ["#378ADD", "#1D9E75", "#D85A30", "#BA7517", "#D4537E", "#7F77DD"]
+    colors = ["#378ADD", "#1D9E75", "#D85A30", "#BA7517", "#D4537E", "#7F77DD"]
 
     # ── 1. Packet success rate ──────────────────
-ax1 = fig.add_subplot(gs[0, 0])
-bars = ax1.bar([f"SF{sf}" for sf in sfs], success, color=colors, edgecolor="white")
-ax1.set_title("Packet Success Rate (%)", fontweight="bold")
-ax1.set_ylabel("Success Rate (%)")
-ax1.set_ylim(0, 110)
-ax1.axhline(y=90, color="red", linestyle="--", linewidth=1, alpha=0.6, label="90% target")
-ax1.legend(fontsize=9)
-for bar, val in zip(bars, success):
+    ax1 = fig.add_subplot(gs[0, 0])
+    bars = ax1.bar([f"SF{sf}" for sf in sfs], success, color=colors, edgecolor="white")
+    ax1.set_title("Packet Success Rate (%)", fontweight="bold")
+    ax1.set_ylabel("Success Rate (%)")
+    ax1.set_ylim(0, 110)
+    ax1.axhline(y=90, color="red", linestyle="--", linewidth=1, alpha=0.6, label="90% target")
+    ax1.legend(fontsize=9)
+    for bar, val in zip(bars, success):
         ax1.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1,
                  f"{val}%", ha="center", va="bottom", fontsize=9)
 
     # ── 2. Collision rate ───────────────────────
-ax2 = fig.add_subplot(gs[0, 1])
-ax2.plot([f"SF{sf}" for sf in sfs], collisions,
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax2.plot([f"SF{sf}" for sf in sfs], collisions,
              marker="o", color="#E24B4A", linewidth=2, markersize=7)
-ax2.fill_between(range(len(sfs)), collisions, alpha=0.15, color="#E24B4A")
-ax2.set_title("Packet Collision Rate (%)", fontweight="bold")
-ax2.set_ylabel("Collision Rate (%)")
-ax2.set_xticks(range(len(sfs)))
-ax2.set_xticklabels([f"SF{sf}" for sf in sfs])
-ax2.set_ylim(0, max(collisions) * 1.4 + 1)
+    ax2.fill_between(range(len(sfs)), collisions, alpha=0.15, color="#E24B4A")
+    ax2.set_title("Packet Collision Rate (%)", fontweight="bold")
+    ax2.set_ylabel("Collision Rate (%)")
+    ax2.set_xticks(range(len(sfs)))
+    ax2.set_xticklabels([f"SF{sf}" for sf in sfs])
+    ax2.set_ylim(0, max(collisions) * 1.4 + 1)
 
     # ── 3. Average RSSI vs Sensitivity ─────────
-ax3 = fig.add_subplot(gs[0, 2])
-ax3.plot([f"SF{sf}" for sf in sfs], rssi,
+    ax3 = fig.add_subplot(gs[0, 2])
+    ax3.plot([f"SF{sf}" for sf in sfs], rssi,
              marker="s", color="#378ADD", linewidth=2, markersize=7, label="Avg RSSI")
-ax3.plot([f"SF{sf}" for sf in sfs], sensitivity,
+    ax3.plot([f"SF{sf}" for sf in sfs], sensitivity,
              marker="^", color="#D85A30", linewidth=2,
              markersize=7, linestyle="--", label="Sensitivity threshold")
-ax3.set_title("RSSI vs Sensitivity (dBm)", fontweight="bold")
-ax3.set_ylabel("dBm")
-ax3.legend(fontsize=9)
-ax3.set_xticks(range(len(sfs)))
-ax3.set_xticklabels([f"SF{sf}" for sf in sfs])
+    ax3.set_title("RSSI vs Sensitivity (dBm)", fontweight="bold")
+    ax3.set_ylabel("dBm")
+    ax3.legend(fontsize=9)
+    ax3.set_xticks(range(len(sfs)))
+    ax3.set_xticklabels([f"SF{sf}" for sf in sfs])
 
     # ── 4. Time on Air ──────────────────────────
-ax4 = fig.add_subplot(gs[1, 0])
-bars4 = ax4.bar([f"SF{sf}" for sf in sfs], toa, color=colors, edgecolor="white")
-ax4.set_title("Time on Air per Packet (ms)", fontweight="bold")
-ax4.set_ylabel("Milliseconds")
-for bar, val in zip(bars4, toa):
+    ax4 = fig.add_subplot(gs[1, 0])
+    bars4 = ax4.bar([f"SF{sf}" for sf in sfs], toa, color=colors, edgecolor="white")
+    ax4.set_title("Time on Air per Packet (ms)", fontweight="bold")
+    ax4.set_ylabel("Milliseconds")
+    for bar, val in zip(bars4, toa):
         ax4.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 10,
                  f"{val}", ha="center", va="bottom", fontsize=9)
 
     # ── 5. Battery life ─────────────────────────
-ax5 = fig.add_subplot(gs[1, 1])
-ax5.plot([f"SF{sf}" for sf in sfs], battery,
+    ax5 = fig.add_subplot(gs[1, 1])
+    ax5.plot([f"SF{sf}" for sf in sfs], battery,
              marker="D", color="#1D9E75", linewidth=2, markersize=7)
-ax5.fill_between(range(len(sfs)), battery, alpha=0.15, color="#1D9E75")
-ax5.set_title("Estimated Battery Life (days)", fontweight="bold")
-ax5.set_ylabel("Days (2000 mAh battery)")
-ax5.set_xticks(range(len(sfs)))
-ax5.set_xticklabels([f"SF{sf}" for sf in sfs])
-for i, (x, y) in enumerate(zip(range(len(sfs)), battery)):
+    ax5.fill_between(range(len(sfs)), battery, alpha=0.15, color="#1D9E75")
+    ax5.set_title("Estimated Battery Life (days)", fontweight="bold")
+    ax5.set_ylabel("Days (2000 mAh battery)")
+    ax5.set_xticks(range(len(sfs)))
+    ax5.set_xticklabels([f"SF{sf}" for sf in sfs])
+    for i, (x, y) in enumerate(zip(range(len(sfs)), battery)):
         ax5.annotate(f"{y}d", (x, y), textcoords="offset points",
                      xytext=(0, 8), ha="center", fontsize=9)
 
     # ── 6. Summary table ────────────────────────
-ax6 = fig.add_subplot(gs[1, 2])
-ax6.axis("off")
-headers = ["SF", "Success%", "RSSI(dBm)", "ToA(ms)", "Battery(d)"]
-table_data = [
+    ax6 = fig.add_subplot(gs[1, 2])
+    ax6.axis("off")
+    headers = ["SF", "Success%", "RSSI(dBm)", "ToA(ms)", "Battery(d)"]
+    table_data = [
         [f"SF{sf}",
          f"{results[sf]['success_rate']}%",
          f"{results[sf]['avg_rssi']}",
@@ -283,28 +284,28 @@ table_data = [
          f"{results[sf]['battery_days']}"]
         for sf in sfs
     ]
-table = ax6.table(
+    table = ax6.table(
         cellText=table_data,
         colLabels=headers,
         cellLoc="center",
         loc="center",
         bbox=[0, 0, 1, 1],
     )
-table.auto_set_font_size(False)
-table.set_fontsize(10)
-for (row, col), cell in table.get_celld().items():
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    for (row, col), cell in table.get_celld().items():
         if row == 0:
             cell.set_facecolor("#378ADD")
             cell.set_text_props(color="white", fontweight="bold")
         elif row % 2 == 0:
             cell.set_facecolor("#f0f4ff")
         cell.set_edgecolor("#dddddd")
-ax6.set_title("Summary Table", fontweight="bold", pad=10)
+    ax6.set_title("Summary Table", fontweight="bold", pad=10)
 
-plt.savefig("lorawan_simulation_results.png", dpi=150,
+    plt.savefig("lorawan_simulation_results.png", dpi=150,
                 bbox_inches="tight", facecolor="white")
-print("\nChart saved as: lorawan_simulation_results.png")
-plt.show()
+    print("\nChart saved as: lorawan_simulation_results.png")
+    plt.show()
 
 
 # ─────────────────────────────────────────────
@@ -312,33 +313,33 @@ plt.show()
 # ─────────────────────────────────────────────
 
 def what_if_mode():
-        print("\n" + "="*55)
-        print("  LoRaWAN What-If Playground")
-        print("="*55)
+    print("\n" + "="*55)
+    print("  LoRaWAN What-If Playground")
+    print("="*55)
 
-try:
+    try:
         num_nodes = int(input("Number of sensor nodes [default 20]: ") or 20)
-        packets   = int(input("Packets per node      [default 50]: ") or 50)
-        radius    = int(input("Network radius (m)    [default 5000]: ") or 5000)
-except ValueError:
+        packets = int(input("Packets per node      [default 50]: ") or 50)
+        radius = int(input("Network radius (m)    [default 5000]: ") or 5000)
+    except ValueError:
         print("Invalid input — using defaults.")
         num_nodes, packets, radius = 20, 50, 5000
 
-print(f"\nSimulating {num_nodes} nodes × {packets} packets each "
+    print(f"\nSimulating {num_nodes} nodes × {packets} packets each "
           f"in a {radius}m radius network...\n")
 
-results = run_simulation(num_nodes, packets, radius)
+    results = run_simulation(num_nodes, packets, radius)
 
-print(f"{'SF':<6} {'Success%':<12} {'Avg RSSI':<14} "
+    print(f"{'SF':<6} {'Success%':<12} {'Avg RSSI':<14} "
           f"{'ToA (ms)':<12} {'Battery (days)'}")
-print("-" * 60)
-for sf in SPREADING_FACTORS:
+    print("-" * 60)
+    for sf in SPREADING_FACTORS:
         r = results[sf]
         print(f"SF{sf:<4} {r['success_rate']:<12} {r['avg_rssi']:<14} "
               f"{r['time_on_air_ms']:<12} {r['battery_days']}")
 
-print("\nGenerating charts...")
-plot_results(results, num_nodes, packets, radius)
+    print("\nGenerating charts...")
+    plot_results(results, num_nodes, packets, radius)
 
 
 # ─────────────────────────────────────────────
@@ -347,22 +348,23 @@ plot_results(results, num_nodes, packets, radius)
 
 if __name__ == "__main__":
     # --- argument parser ---
-        parser = argparse.ArgumentParser(description="LoRaWAN Network Simulator")
-        parser.add_argument("--export", metavar="FILE", help="Export results to a CSV file (e.g. results.csv)")
-        args = parser.parse_args()
+    parser = argparse.ArgumentParser(description="LoRaWAN Network Simulator")
+    parser.add_argument("--export", metavar="FILE", help="Export results to a CSV file (e.g. results.csv)")
+    args = parser.parse_args()
 
-        print("="*55)
-        print(" LoRaWAN Network Simulator")
-        print("="*55)
+    print("="*55)
+    print(" LoRaWAN Network Simulator")
+    print("="*55)
 
-        default_nodes, default_packets, default_radius = 20, 50, 5000
-        print(f"\nRunning default simulation ({default_nodes} nodes, {default_packets} packets, {default_radius}m radius)...")
-        results = run_simulation(default_nodes, default_packets, default_radius)
-        plot_results(results, default_nodes, default_packets, default_radius)
+    default_nodes, default_packets, default_radius = 20, 50, 5000
+    print(f"\nRunning default simulation ({default_nodes} nodes, {default_packets} packets, {default_radius}m radius)...")
+    results = run_simulation(default_nodes, default_packets, default_radius)
+    plot_results(results, default_nodes, default_packets, default_radius)
+
     # --- export if flag provided ---
-if args.export:
+    if args.export:
         export_csv(results, args.export)
 
-again = input("\nRun What-If mode? (y/n): ").strip().lower()
-if again == "y":
+    again = input("\nRun What-If mode? (y/n): ").strip().lower()
+    if again == "y":
         what_if_mode()
