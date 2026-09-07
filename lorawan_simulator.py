@@ -192,13 +192,14 @@ def run_simulation(num_nodes=20, num_packets_per_node=50, area_radius_m=5000):
 # VISUALISATION
 # ─────────────────────────────────────────────
 
-def plot_results(results, num_nodes, num_packets_per_node, area_radius_m):    sfs         = list(results.keys())
-success = [results[sf]["success_rate"]   for sf in sfs]
-collisions = [results[sf]["collision_rate"] for sf in sfs]
-rssi = [results[sf]["avg_rssi"]       for sf in sfs]
-toa = [results[sf]["time_on_air_ms"] for sf in sfs]
-battery = [results[sf]["battery_days"]   for sf in sfs]
-sensitivity = [results[sf]["sensitivity"]    for sf in sfs]
+def plot_results(results, num_nodes, num_packets_per_node, area_radius_m):
+    sfs = list(results.keys())
+    success = [results[sf]["success_rate"] for sf in sfs]
+    collisions = [results[sf]["collision_rate"] for sf in sfs]
+    rssi = [results[sf]["avg_rssi"] for sf in sfs]
+    toa = [results[sf]["time_on_air_ms"] for sf in sfs]
+    battery = [results[sf]["battery_days"] for sf in sfs]
+    sensitivity = [results[sf]["sensitivity"] for sf in sfs]
 
 fig = plt.figure(figsize=(16, 10))
 fig.suptitle("LoRaWAN Network Simulator — Spreading Factor Analysis",
